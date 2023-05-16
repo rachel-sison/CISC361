@@ -57,37 +57,52 @@ printf("Incorrect Value Entered");
 printf("\nProcess ID\t\tArrival Time\t\tBurst Time\t Turnaround Time\tWaiting Time\n");
 // Perform Scheduling Calculations
 if (!round_robin_algorithm)
-{for (i = 0; i < num_processes; i++)
-    {
-        // Update total waiting time
-        wait_time += total_time - arrival_time[i];
-        
-        // Update total turnaround time
-        turnaround_time += total_time - arrival_time[i] + burst_time[i];
-        
-        // Update total time
-        total_time += burst_time[i];
-        
-        // Print process details
-        printf("%d\t\t\t%d\t\t\t%d\t\t%d\t\t%d\n", i + 1, arrival_time[i], burst_time[i],
-            total_time - arrival_time[i], total_time - arrival_time[i] - burst_time[i]);
-}
-{int remaining_time[num_processes];
-    int current_time = 0;
-    int completed_processes = 0;
+ {
+    for(int i = 0; i <num_processes -1; i++){
+        for(int j= i + 1; j < num_processes; j++){
+            if(arrival_time[j] < arrival_time[i]){
+                int tmp_arrive  = arrival_time[i];
+                arrival_time[i]= arrival_time[j];
+                arrival_time[j] = tmp_arrive;
 
-    
-}
-}
+                int tmp_burst = burst_time[i];
+                burst_time[i] = burst_time[j];
+                burst_time[j] = tmp_burst;
+
+                int tmp = temp[i];
+                temp[i] = temp[j];
+                temp[j] = tmp;
+            }
+        }
+    }
+ }
+
 // Calculate & Print Average Wait and Turnaround Times
 average_wait_time = 0;
 average_turnaround_time = 0;
+
+for(i = 0; i < num_processes; i++){
+    if(i == 0){
+        wait_time = 0;
+    }
+    else{
+        wait_time = total_time - arrival_time[i];
+    }
+
+    turnaround_time = wait_time + burst_time[i];
+
+    total_time += burst_time[i];
+
+    printf("\n%d\t\t\t%d\t\t\t%d\t\t\t%d\t\t\t%d", i + 1, arrival_time[i], burst_time[i], turnaround_time, wait_time);
+
+    average_wait_time += wait_time;
+    average_turnaround_time += turnaround_time;
+}
+
+average_wait_time = average_wait_time/num_processes;
+average_turnaround_time = average_turnaround_time/num_processes;
+
 printf("\n\nAverage Waiting Time:\t%f", average_wait_time);
 printf("\nAvg Turnaround Time:\t%f\n", average_turnaround_time);
 return 0;
 }
-
-/*1. Read through the code and then, using the if/else declaration in the “Perform Scheduling
-Calculations” section, write code that calculates and outputs how a First-Come-First-Serve
-scheduler would handle the processes you define. To implement this: “Add code in the "Perform
-*/
